@@ -1,3 +1,7 @@
+/**
+ * Arranque local / VPS: servidor HTTP con listen().
+ * En Vercel no se usa: el runtime toma `src/server.ts` (export default app).
+ */
 import "dotenv/config";
 import path from "path";
 import fs from "fs";
