@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import { createServer } from "http";
+import { connectDB } from "./config/dbCon";
 import routes from "./routes";
 import { logger } from "./utils/logs/logger";
 
@@ -13,6 +14,15 @@ app.use(cookieParser());
 
 app.get("/health", (_req, res) => {
   res.status(200).json({ status: "ok", timestamp: new Date().toISOString() });
+});
+
+app.use(async (_req, _res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (err) {
+    next(err);
+  }
 });
 
 app.use(routes);

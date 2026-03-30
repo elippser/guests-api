@@ -1,21 +1,14 @@
 import mongoose from "mongoose";
 import { logger } from "../utils/logs/logger";
 
-export async function connectDB(): Promise<void> {
-  const uri = process.env.MONGODB_URI;
+let connectPromise: Promise<void> | null = null;
+let listenersAttached = false;
 
-  if (!uri) {
-    logger.error("MONGODB_URI is not defined in environment variables");
-    throw new Error("MONGODB_URI is not defined");
+function attachConnectionListeners(): void {
+  if (listenersAttached) {
+    return;
   }
-
-  try {
-    await mongoose.connect(uri);
-    logger.info("MongoDB connected successfully");
-  } catch (error) {
-    logger.error("MongoDB connection error:", error);
-    throw error;
-  }
+  listenersAttached = true;
 
   mongoose.connection.on("connected", () => {
     logger.info("Mongoose connected to MongoDB");
@@ -28,4 +21,33 @@ export async function connectDB(): Promise<void> {
   mongoose.connection.on("disconnected", () => {
     logger.warn("Mongoose disconnected from MongoDB");
   });
+}
+
+export async function connectDB(): Promise<void> {
+  const uri = process.env.MONGODB_URI;
+
+  if (!uri) {
+    logger.error("MONGODB_URI is not defined in environment variables");
+    throw new Error("MONGODB_URI is not defined");
+  }
+
+  if (mongoose.connection.readyState === 1) {
+    return;
+  }
+
+  if (!connectPromise) {
+    attachConnectionListeners();
+    connectPromise = (async () => {
+      try {
+        await mongoose.connect(uri);
+        logger.info("MongoDB connected successfully");
+      } catch (error) {
+        connectPromise = null;
+        logger.error("MongoDB connection error:", error);
+        throw error;
+      }
+    })();
+  }
+
+  await connectPromise;
 }
