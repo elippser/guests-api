@@ -1,5 +1,5 @@
 import mongoose, { Document, Model, Schema } from "mongoose";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 
 export type DocumentType = "dni" | "passport" | "other";
 export type GuestStatus = "active" | "suspended" | "deleted";
