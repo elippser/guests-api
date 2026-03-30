@@ -4,7 +4,7 @@ import cookieParser from "cookie-parser";
 import { createServer } from "http";
 import { connectDB } from "./config/dbCon";
 import routes from "./routes";
-import { logger } from "./utils/logs/logger";
+import { logger } from "./logger";
 
 const app = express();
 

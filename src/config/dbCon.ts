@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { logger } from "../utils/logs/logger";
+import { logger } from "../logger";
 
 let connectPromise: Promise<void> | null = null;
 let listenersAttached = false;

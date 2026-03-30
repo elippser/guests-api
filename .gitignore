@@ -1,6 +1,7 @@
 node_modules/
 dist/
-logs/
+# Solo logs de runtime en la raíz del proyecto (no "logs" dentro de src/)
+/logs/
 .env
 *.log
 .DS_Store

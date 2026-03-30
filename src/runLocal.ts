@@ -7,7 +7,7 @@ import path from "path";
 import fs from "fs";
 import { connectDB } from "./config/dbCon";
 import { createHttpServer } from "./server";
-import { logger } from "./utils/logs/logger";
+import { logger } from "./logger";
 
 const PORT = process.env.PORT || 5000;
 
